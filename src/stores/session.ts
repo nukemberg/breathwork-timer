@@ -27,6 +27,19 @@ export const useSessionStore = defineStore('session', () => {
   /** duration === 0 means user must tap to advance */
   const isUserTimedPhase = computed(() => (currentPhase.value?.duration ?? -1) === 0)
 
+  /** The phase that follows the current one, or null if this is the last phase. */
+  const nextPhase = computed<BreathPhase | null>(() => {
+    if (!plan.value || !currentStage.value) return null
+    const stage = currentStage.value
+    const pos = position.value
+    const nextPhaseIdx = pos.phaseIndex + 1
+    if (nextPhaseIdx < stage.phases.length) return stage.phases[nextPhaseIdx]
+    if (pos.roundIndex + 1 < stage.rounds) return stage.phases[0]
+    const nextStageIdx = pos.stageIndex + 1
+    if (nextStageIdx < plan.value.stages.length) return plan.value.stages[nextStageIdx].phases[0]
+    return null
+  })
+
   // ── Actions ────────────────────────────────────────────────────────────────
 
   function startSession(trainingPlan: TrainingPlan) {
@@ -116,6 +129,7 @@ export const useSessionStore = defineStore('session', () => {
     currentPhase,
     totalStages,
     isUserTimedPhase,
+    nextPhase,
     startSession,
     pauseSession,
     resumeSession,

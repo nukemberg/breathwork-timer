@@ -50,6 +50,11 @@ onBeforeRouteLeave((_to, _from, next) => {
 
 const isCompleted = computed(() => session.status === 'completed')
 
+const phaseKey = computed(() => {
+  const p = session.position
+  return `${p.stageIndex}-${p.roundIndex}-${p.phaseIndex}`
+})
+
 const overallTime = computed(() => {
   const s = session.overallElapsed
   const m = Math.floor(s / 60)
@@ -158,6 +163,9 @@ function finishAndGoHome() {
           :timeRemaining="session.phaseTimeRemaining"
           :totalDuration="session.currentPhase.duration"
           :isUserTimed="session.isUserTimedPhase"
+          :phaseKey="phaseKey"
+          :isPaused="session.status === 'paused'"
+          :nextPhase="session.nextPhase"
         />
         <div v-else class="loading-placeholder" />
       </div>

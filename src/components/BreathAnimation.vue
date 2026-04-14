@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { PhaseType } from '@/types'
+import type { PhaseType, BreathPhase } from '@/types'
 
 const props = defineProps<{
   phaseType: PhaseType
-  timeRemaining: number   // seconds
-  totalDuration: number   // seconds (0 for user-timed)
+  timeRemaining: number          // seconds
+  totalDuration: number          // seconds (0 for user-timed)
   isUserTimed?: boolean
+  phaseKey: string | number      // changes each phase → forces ring element re-creation
+  isPaused?: boolean
+  nextPhase?: BreathPhase | null
 }>()
 
 // ── Orb scale per phase ────────────────────────────────────────────────────
@@ -61,13 +64,17 @@ const orbTransitionDuration = computed(() =>
 const RING_RADIUS = 88
 const circumference = 2 * Math.PI * RING_RADIUS  // ~552.9
 
-const dashOffset = computed(() => {
-  if (props.isUserTimed || props.totalDuration <= 0) return 0
-  const progress = Math.max(0, props.timeRemaining) / props.totalDuration
-  return circumference * (1 - progress)
-})
-
 const ringColor = computed(() => orbColor.value)
+const ringHidden = computed(() => props.isUserTimed || props.totalDuration <= 0)
+
+// ── Next phase label ───────────────────────────────────────────────────────
+
+const nextPhaseLabel = computed(() =>
+  props.nextPhase ? PHASE_LABELS[props.nextPhase.type] : null
+)
+const nextPhaseColor = computed(() =>
+  props.nextPhase ? ORB_COLOR[props.nextPhase.type] : null
+)
 
 // ── Countdown display ──────────────────────────────────────────────────────
 
@@ -89,14 +96,19 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
           :r="RING_RADIUS"
         />
 
-        <!-- Ring progress -->
+        <!-- Ring progress — :key forces recreation (resets CSS animation) on each phase -->
         <circle
+          :key="props.phaseKey"
           class="ring-fill"
           cx="100" cy="100"
           :r="RING_RADIUS"
           :stroke="ringColor"
           :stroke-dasharray="circumference"
-          :stroke-dashoffset="dashOffset"
+          :style="{
+            '--ring-duration': ringHidden ? '0s' : `${props.totalDuration}s`,
+            animationPlayState: props.isPaused ? 'paused' : 'running',
+            opacity: ringHidden ? 0 : 1,
+          }"
         />
 
         <!-- Orb -->
@@ -119,6 +131,9 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
           {{ displaySeconds }}
         </span>
         <span v-else class="tap-hint">tap anywhere</span>
+        <span v-if="nextPhaseLabel" class="next-phase" :style="{ color: nextPhaseColor ?? '' }">
+          Next · {{ nextPhaseLabel }}
+        </span>
       </div>
     </div>
   </div>
@@ -169,11 +184,18 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
 .ring-fill {
   fill: none;
   stroke-width: 4;
-  stroke-linecap: round;
+  stroke-linecap: butt;
   /* Rotate so it starts at top (12 o'clock) */
   transform: rotate(-90deg);
   transform-origin: 100px 100px;
-  transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+  /* Only crossfade color; dashoffset is driven by the CSS animation below */
+  transition: stroke 0.5s ease;
+  animation: ring-drain var(--ring-duration, 0s) linear forwards;
+}
+
+@keyframes ring-drain {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 552.92; } /* 2π × 88 */
 }
 
 /* Main orb */
@@ -215,5 +237,14 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.03em;
+}
+
+.next-phase {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 2px;
 }
 </style>
