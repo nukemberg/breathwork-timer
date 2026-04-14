@@ -50,12 +50,23 @@ onBeforeRouteLeave((_to, _from, next) => {
 
 const isCompleted = computed(() => session.status === 'completed')
 
-const overallTime = computed(() => {
-  const s = session.overallElapsed
+const phaseKey = computed(() => {
+  const p = session.position
+  return `${p.stageIndex}-${p.roundIndex}-${p.phaseIndex}`
+})
+
+function fmtTime(s: number): string {
   const m = Math.floor(s / 60)
   const sec = s % 60
   return `${m}:${String(sec).padStart(2, '0')}`
-})
+}
+
+// Top-bar shows session time remaining; completed screen shows elapsed
+const overallTime = computed(() => fmtTime(session.sessionTimeRemaining))
+const elapsedTime = computed(() => fmtTime(session.overallElapsed))
+const stageTime = computed(() =>
+  `${fmtTime(session.stageTimeRemaining)} / ${fmtTime(session.stageTimeTotal)}`
+)
 
 // ── Actions ────────────────────────────────────────────────────────────────
 
@@ -98,7 +109,7 @@ function finishAndGoHome() {
             </svg>
           </div>
           <h2 class="completed-title">Session Complete</h2>
-          <div class="completed-time">{{ overallTime }}</div>
+          <div class="completed-time">{{ elapsedTime }}</div>
           <p class="completed-subtitle text-secondary">Total time</p>
           <p class="completed-plan text-secondary">{{ session.plan?.name }}</p>
           <button class="btn btn-primary completed-btn" @click="finishAndGoHome">Done</button>
@@ -158,6 +169,9 @@ function finishAndGoHome() {
           :timeRemaining="session.phaseTimeRemaining"
           :totalDuration="session.currentPhase.duration"
           :isUserTimed="session.isUserTimedPhase"
+          :phaseKey="phaseKey"
+          :isPaused="session.status === 'paused'"
+          :nextPhase="session.nextPhase"
         />
         <div v-else class="loading-placeholder" />
       </div>
@@ -179,6 +193,7 @@ function finishAndGoHome() {
           :currentRound="session.position.roundIndex + 1"
           :stageName="session.currentStage.name"
         />
+        <div class="stage-time" v-if="session.stageTimeTotal > 0">{{ stageTime }}</div>
       </div>
     </div>
   </div>
@@ -256,6 +271,15 @@ function finishAndGoHome() {
   padding: 12px 16px;
   padding-bottom: calc(24px + var(--safe-bottom));
   flex-shrink: 0;
+}
+
+.stage-time {
+  text-align: center;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.03em;
 }
 
 /* ── Completed overlay ── */

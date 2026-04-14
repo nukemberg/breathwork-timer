@@ -27,6 +27,53 @@ export const useSessionStore = defineStore('session', () => {
   /** duration === 0 means user must tap to advance */
   const isUserTimedPhase = computed(() => (currentPhase.value?.duration ?? -1) === 0)
 
+  /** Total planned duration of the current stage in seconds (user-timed phases count as 0). */
+  const stageTimeTotal = computed(() => {
+    if (!currentStage.value) return 0
+    const s = currentStage.value
+    return s.rounds * s.phases.reduce((sum, p) => sum + p.duration, 0)
+  })
+
+  /** Remaining seconds in the current stage. */
+  const stageTimeRemaining = computed(() => {
+    if (!currentStage.value) return 0
+    const stage = currentStage.value
+    const pos = position.value
+    let remaining = phaseTimeRemaining.value
+    for (let pi = pos.phaseIndex + 1; pi < stage.phases.length; pi++) {
+      remaining += stage.phases[pi].duration
+    }
+    const remainingRounds = stage.rounds - pos.roundIndex - 1
+    if (remainingRounds > 0) {
+      remaining += remainingRounds * stage.phases.reduce((sum, p) => sum + p.duration, 0)
+    }
+    return remaining
+  })
+
+  /** Remaining seconds in the full session. */
+  const sessionTimeRemaining = computed(() => {
+    if (!plan.value) return 0
+    let remaining = stageTimeRemaining.value
+    for (let si = position.value.stageIndex + 1; si < plan.value.stages.length; si++) {
+      const s = plan.value.stages[si]
+      remaining += s.rounds * s.phases.reduce((sum, p) => sum + p.duration, 0)
+    }
+    return remaining
+  })
+
+  /** The phase that follows the current one, or null if this is the last phase. */
+  const nextPhase = computed<BreathPhase | null>(() => {
+    if (!plan.value || !currentStage.value) return null
+    const stage = currentStage.value
+    const pos = position.value
+    const nextPhaseIdx = pos.phaseIndex + 1
+    if (nextPhaseIdx < stage.phases.length) return stage.phases[nextPhaseIdx]
+    if (pos.roundIndex + 1 < stage.rounds) return stage.phases[0]
+    const nextStageIdx = pos.stageIndex + 1
+    if (nextStageIdx < plan.value.stages.length) return plan.value.stages[nextStageIdx].phases[0]
+    return null
+  })
+
   // ── Actions ────────────────────────────────────────────────────────────────
 
   function startSession(trainingPlan: TrainingPlan) {
@@ -116,6 +163,10 @@ export const useSessionStore = defineStore('session', () => {
     currentPhase,
     totalStages,
     isUserTimedPhase,
+    nextPhase,
+    stageTimeTotal,
+    stageTimeRemaining,
+    sessionTimeRemaining,
     startSession,
     pauseSession,
     resumeSession,
