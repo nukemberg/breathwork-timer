@@ -18,6 +18,20 @@ export function useBreathSession() {
 
   let audioCtx: AudioContext | null = null
 
+  // ── Wall-clock phase tracking ──────────────────────────────────────────────
+  // Stores the effective wall-clock start time of the current phase.
+  // Back-calculated when resuming so paused sessions pick up where they left off.
+  let phaseStartedAt = 0
+
+  function syncPhaseStart() {
+    const total = session.currentPhase?.duration ?? 0
+    const remaining = session.phaseTimeRemaining
+    // If remaining === total, phase just started. Otherwise, rewind start time.
+    phaseStartedAt = Date.now() - (total - remaining) * 1000
+  }
+
+  // ── Audio ──────────────────────────────────────────────────────────────────
+
   function getAudioContext(): AudioContext {
     if (!audioCtx) audioCtx = new AudioContext()
     return audioCtx
@@ -60,19 +74,30 @@ export function useBreathSession() {
     vibrate(40)
   }
 
+  // ── Tick ──────────────────────────────────────────────────────────────────
+
   function tick() {
     if (session.status !== 'active') return
 
-    session.tickPhase()
+    session.tickPhase()  // increments overallElapsed + phaseElapsed
 
-    // For user-timed phases, the composable does not auto-advance
     if (session.isUserTimedPhase) return
 
-    if (session.phaseTimeRemaining <= 0) {
+    const phase = session.currentPhase
+    if (!phase) return
+
+    // Wall-clock remaining — accurate even when setInterval was throttled
+    const elapsed = (Date.now() - phaseStartedAt) / 1000
+    const remaining = Math.max(0, phase.duration - elapsed)
+    session.setPhaseTimeRemaining(Math.ceil(remaining))
+
+    if (remaining <= 0) {
       const completed = session.advancePhase()
+      syncPhaseStart()
       if (completed) {
         timer.stop()
         wakeLock.release()
+        removeVisibilityListener()
         vibrate([80, 40, 80, 40, 120])
       } else {
         onPhaseTransition()
@@ -80,26 +105,52 @@ export function useBreathSession() {
     }
   }
 
+  // ── Visibility catch-up ───────────────────────────────────────────────────
+  // When the browser throttles setInterval (tab hidden, screen locked),
+  // fire a tick immediately when the page becomes visible again to resync.
+
+  function onVisibilityChange() {
+    if (!document.hidden && session.status === 'active') {
+      tick()
+    }
+  }
+
+  function addVisibilityListener() {
+    document.addEventListener('visibilitychange', onVisibilityChange)
+  }
+
+  function removeVisibilityListener() {
+    document.removeEventListener('visibilitychange', onVisibilityChange)
+  }
+
+  // ── Session controls ──────────────────────────────────────────────────────
+
   async function startSession(trainingPlan: TrainingPlan) {
     session.startSession(trainingPlan)
+    syncPhaseStart()
     await wakeLock.request()
     onPhaseTransition()
+    addVisibilityListener()
     timer.start(tick)
   }
 
   function pauseSession() {
     session.pauseSession()
     timer.stop()
+    removeVisibilityListener()
   }
 
   function resumeSession() {
     session.resumeSession()
+    syncPhaseStart()  // recalibrate wall-clock start for remaining time
+    addVisibilityListener()
     timer.start(tick)
   }
 
   function endSession() {
     timer.stop()
     wakeLock.release()
+    removeVisibilityListener()
     session.resetSession()
   }
 
@@ -107,9 +158,11 @@ export function useBreathSession() {
   function userAdvancePhase() {
     if (!session.isUserTimedPhase) return
     const completed = session.advancePhase()
+    syncPhaseStart()
     if (completed) {
       timer.stop()
       wakeLock.release()
+      removeVisibilityListener()
       vibrate([80, 40, 80, 40, 120])
     } else {
       onPhaseTransition()
@@ -122,6 +175,7 @@ export function useBreathSession() {
       if (newStatus === 'completed' || newStatus === 'idle') {
         timer.stop()
         wakeLock.release()
+        removeVisibilityListener()
       }
     }
   )
@@ -129,6 +183,7 @@ export function useBreathSession() {
   onUnmounted(() => {
     timer.stop()
     wakeLock.release()
+    removeVisibilityListener()
   })
 
   return {

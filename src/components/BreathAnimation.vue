@@ -100,14 +100,15 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
         <circle
           :key="props.phaseKey"
           class="ring-fill"
+          :class="{ 'ring-fill--pulse': props.isUserTimed }"
           cx="100" cy="100"
           :r="RING_RADIUS"
           :stroke="ringColor"
           :stroke-dasharray="circumference"
-          :style="{
+          :style="props.isUserTimed ? {} : {
             '--ring-duration': ringHidden ? '0s' : `${props.totalDuration}s`,
             animationPlayState: props.isPaused ? 'paused' : 'running',
-            opacity: ringHidden ? 0 : 1,
+            opacity: 1,
           }"
         />
 
@@ -130,7 +131,10 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
         <span v-if="!isUserTimed" class="countdown" :key="displaySeconds">
           {{ displaySeconds }}
         </span>
-        <span v-else class="tap-hint">tap anywhere</span>
+        <span v-else class="tap-hint">
+          <span class="tap-hint-dot" />
+          tap to continue
+        </span>
         <span v-if="nextPhaseLabel" class="next-phase" :style="{ color: nextPhaseColor ?? '' }">
           Next · {{ nextPhaseLabel }}
         </span>
@@ -198,6 +202,17 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
   to   { stroke-dashoffset: 552.92; } /* 2π × 88 */
 }
 
+/* Pulsing ring shown during user-timed (tap-to-continue) phases */
+.ring-fill--pulse {
+  stroke-dashoffset: 0; /* full ring visible */
+  animation: ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 0.7; }
+}
+
 /* Main orb */
 .orb {
   transform-box: fill-box;
@@ -234,9 +249,27 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
 }
 
 .tap-hint {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.55);
-  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.04em;
+  animation: tap-hint-pulse 1.8s ease-in-out infinite;
+}
+
+.tap-hint-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+@keyframes tap-hint-pulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
 }
 
 .next-phase {

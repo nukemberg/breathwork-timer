@@ -102,14 +102,18 @@ export const useSessionStore = defineStore('session', () => {
     overallElapsed.value = 0
   }
 
-  /** Called every second by the timer composable. */
+  /** Called every second by the timer composable. Increments elapsed counters only.
+   *  phaseTimeRemaining is now managed by the composable using wall-clock time. */
   function tickPhase() {
     if (status.value !== 'active') return
     overallElapsed.value += 1
     phaseElapsed.value += 1
-    if (!isUserTimedPhase.value && phaseTimeRemaining.value > 0) {
-      phaseTimeRemaining.value -= 1
-    }
+  }
+
+  /** Set by the composable based on wall-clock time, keeping display accurate even
+   *  when setInterval is throttled by the browser. */
+  function setPhaseTimeRemaining(value: number) {
+    phaseTimeRemaining.value = Math.max(0, value)
   }
 
   /**
@@ -172,6 +176,7 @@ export const useSessionStore = defineStore('session', () => {
     resumeSession,
     resetSession,
     tickPhase,
+    setPhaseTimeRemaining,
     advancePhase,
   }
 })
