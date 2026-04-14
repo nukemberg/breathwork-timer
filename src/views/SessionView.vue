@@ -18,11 +18,9 @@ onMounted(async () => {
     router.replace({ name: 'home' })
     return
   }
-  if (session.status === 'idle') {
-    await breathSession.startSession(session.plan)
-  } else if (session.status === 'paused') {
-    breathSession.resumeSession()
-  }
+  // Always start fresh — onBeforeRouteLeave prevents leaving a live session
+  // without confirmation, so when we mount here the plan is freshly set.
+  await breathSession.startSession(session.plan)
 })
 
 onUnmounted(() => {

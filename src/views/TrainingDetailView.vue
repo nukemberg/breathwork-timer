@@ -55,72 +55,76 @@ function formatDuration(minutes: number): string {
 </script>
 
 <template>
-  <main class="page" v-if="training">
-    <!-- Back header -->
-    <div class="detail-header">
-      <button class="btn btn-ghost btn-icon" @click="router.back()" aria-label="Back">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <button v-if="training.isCustom" class="btn btn-ghost" @click="goToEdit" style="font-size: 0.875rem; min-height:36px; padding: 0 12px;">
-        Edit
-      </button>
-    </div>
-
-    <!-- Title area -->
-    <div class="detail-hero">
-      <div class="hero-badges">
-        <span class="badge" :class="`badge-${training.difficulty}`">{{ training.difficulty }}</span>
-        <span v-if="training.isCustom" class="badge badge-custom">custom</span>
-      </div>
-      <h1>{{ training.name }}</h1>
-      <p class="detail-desc text-secondary">{{ training.description }}</p>
-
-      <div class="detail-meta">
-        <div class="meta-chip">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Training found: flex column layout so CTA is always in normal flow (not fixed) -->
+  <div class="detail-page" v-if="training">
+    <!-- Scrollable content -->
+    <div class="detail-scroll">
+      <!-- Back header -->
+      <div class="detail-header">
+        <button class="btn btn-ghost btn-icon" @click="router.back()" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          {{ formatDuration(training.estimatedMinutes) }}
-        </div>
-        <div class="meta-chip">{{ totalRounds(training) }} total rounds</div>
-        <div class="meta-chip">{{ training.stages.length }} stage{{ training.stages.length !== 1 ? 's' : '' }}</div>
+        </button>
+        <button v-if="training.isCustom" class="btn btn-ghost" @click="goToEdit" style="font-size: 0.875rem; min-height:36px; padding: 0 12px;">
+          Edit
+        </button>
       </div>
+
+      <!-- Title area -->
+      <div class="detail-hero">
+        <div class="hero-badges">
+          <span class="badge" :class="`badge-${training.difficulty}`">{{ training.difficulty }}</span>
+          <span v-if="training.isCustom" class="badge badge-custom">custom</span>
+        </div>
+        <h1>{{ training.name }}</h1>
+        <p class="detail-desc text-secondary">{{ training.description }}</p>
+
+        <div class="detail-meta">
+          <div class="meta-chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            {{ formatDuration(training.estimatedMinutes) }}
+          </div>
+          <div class="meta-chip">{{ totalRounds(training) }} total rounds</div>
+          <div class="meta-chip">{{ training.stages.length }} stage{{ training.stages.length !== 1 ? 's' : '' }}</div>
+        </div>
+      </div>
+
+      <!-- Stages breakdown -->
+      <section class="stages-section">
+        <h2 class="stages-title">Program</h2>
+        <div class="stages-list">
+          <div
+            v-for="(stage, si) in training.stages"
+            :key="stage.id"
+            class="stage-card card"
+          >
+            <div class="stage-header">
+              <span class="stage-num">{{ si + 1 }}</span>
+              <div>
+                <div class="stage-name">{{ stage.name }}</div>
+                <div class="stage-rounds text-muted">{{ stage.rounds }} round{{ stage.rounds !== 1 ? 's' : '' }}</div>
+              </div>
+            </div>
+            <div class="phase-pills">
+              <div
+                v-for="(phase, pi) in stage.phases"
+                :key="pi"
+                class="phase-pill"
+                :style="{ borderColor: PHASE_COLORS[phase.type], color: PHASE_COLORS[phase.type] }"
+              >
+                {{ phaseLabel(phase.type, phase.duration) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- Stages breakdown -->
-    <section class="stages-section">
-      <h2 class="stages-title">Program</h2>
-      <div class="stages-list">
-        <div
-          v-for="(stage, si) in training.stages"
-          :key="stage.id"
-          class="stage-card card"
-        >
-          <div class="stage-header">
-            <span class="stage-num">{{ si + 1 }}</span>
-            <div>
-              <div class="stage-name">{{ stage.name }}</div>
-              <div class="stage-rounds text-muted">{{ stage.rounds }} round{{ stage.rounds !== 1 ? 's' : '' }}</div>
-            </div>
-          </div>
-          <div class="phase-pills">
-            <div
-              v-for="(phase, pi) in stage.phases"
-              :key="pi"
-              class="phase-pill"
-              :style="{ borderColor: PHASE_COLORS[phase.type], color: PHASE_COLORS[phase.type] }"
-            >
-              {{ phaseLabel(phase.type, phase.duration) }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
+    <!-- CTA footer — in normal document flow, not position:fixed -->
     <div class="detail-cta">
       <div class="cta-toggles">
         <label class="toggle-row">
@@ -136,7 +140,7 @@ function formatDuration(minutes: number): string {
         Start Session
       </button>
     </div>
-  </main>
+  </div>
 
   <main class="page" v-else>
     <div class="not-found">
@@ -147,6 +151,22 @@ function formatDuration(minutes: number): string {
 </template>
 
 <style scoped>
+/* ── Page layout: flex column so CTA footer sits below scrollable content ── */
+.detail-page {
+  display: flex;
+  flex-direction: column;
+  /* fill viewport minus the fixed bottom nav */
+  height: calc(100dvh - var(--nav-height) - var(--safe-bottom));
+  padding-top: var(--safe-top);
+}
+
+.detail-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;   /* required: flex child with overflow must have min-height:0 */
+}
+
+/* ── Header ── */
 .detail-header {
   display: flex;
   align-items: center;
@@ -154,6 +174,7 @@ function formatDuration(minutes: number): string {
   padding: 8px 8px 0;
 }
 
+/* ── Hero ── */
 .detail-hero {
   padding: 16px 16px 24px;
 }
@@ -193,8 +214,7 @@ h1 {
 
 /* ── Stages ── */
 .stages-section {
-  padding: 0 16px;
-  margin-bottom: 120px;
+  padding: 0 16px 16px;
 }
 
 .stages-title {
@@ -263,14 +283,12 @@ h1 {
   opacity: 0.85;
 }
 
-/* ── CTA ── */
+/* ── CTA footer — normal flow, NOT position:fixed ── */
 .detail-cta {
-  position: fixed;
-  bottom: calc(var(--nav-height) + var(--safe-bottom));
-  left: 0;
-  right: 0;
+  flex-shrink: 0;
   padding: 12px 16px;
-  background: linear-gradient(to top, var(--color-bg-primary) 60%, transparent);
+  background: var(--color-bg-primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   gap: 10px;

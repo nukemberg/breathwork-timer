@@ -88,6 +88,76 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
   },
 
   {
+    id: 'buteyko',
+    name: 'Buteyko Breathing',
+    description: 'Developed by Konstantin Buteyko to raise CO₂ tolerance and normalize breathing volume. Nasal breathing only. The "control pause" — holding after a gentle exhale — is the core diagnostic and training tool.',
+    difficulty: 'intermediate',
+    estimatedMinutes: 8,
+    stages: [
+      stage('but-s1', 'Reduced Breathing', 10, [
+        { type: 'inhale',          duration: 2, method: 'nose' },
+        { type: 'exhale',          duration: 3, method: 'nose' },
+        { type: 'empty-retention', duration: 2, method: 'nose' },
+      ]),
+      stage('but-s2', 'Control Pause', 5, [
+        { type: 'inhale',          duration: 2, method: 'nose' },
+        { type: 'exhale',          duration: 3, method: 'nose' },
+        { type: 'empty-retention', duration: 0, method: 'nose' },  // user-timed: hold until first urge
+      ]),
+      stage('but-s3', 'Recovery Breathing', 5, [
+        { type: 'inhale', duration: 3, method: 'nose' },
+        { type: 'exhale', duration: 4, method: 'nose' },
+      ]),
+    ],
+  },
+
+  {
+    id: 'antara-kumbhaka',
+    name: 'Antara Kumbhaka',
+    description: 'Internal (antara) breath retention after full inhale. Classic pranayama ratio 1:4:2. Builds prana, calms the mind, and deepens lung capacity. Keep the spine tall and apply a gentle chin lock (jalandhara bandha) during the hold.',
+    difficulty: 'intermediate',
+    estimatedMinutes: 5,
+    stages: [
+      stage('ank-s1', 'Preparatory Breathing', 4, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 8, method: 'nose' },
+      ]),
+      stage('ank-s2', 'Antara Kumbhaka (1:4:2)', 8, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 16, method: 'nose' },
+        { type: 'exhale',         duration: 8,  method: 'nose' },
+      ]),
+      stage('ank-s3', 'Integration', 4, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 8, method: 'nose' },
+      ]),
+    ],
+  },
+
+  {
+    id: 'bahya-kumbhaka',
+    name: 'Bahya Kumbhaka',
+    description: 'External (bahya) breath retention after full exhale. More challenging than internal retention; stimulates the digestive fire and strengthens the core. Apply mula and uddiyana bandha during the empty hold.',
+    difficulty: 'advanced',
+    estimatedMinutes: 6,
+    stages: [
+      stage('bak-s1', 'Preparatory Breathing', 4, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 8, method: 'nose' },
+      ]),
+      stage('bak-s2', 'Bahya Kumbhaka (1:2:4)', 8, [
+        { type: 'inhale',          duration: 4, method: 'nose' },
+        { type: 'exhale',          duration: 8, method: 'nose' },
+        { type: 'empty-retention', duration: 0, method: 'nose' },  // user-timed: hold with bandhas
+      ]),
+      stage('bak-s3', 'Integration', 4, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 8, method: 'nose' },
+      ]),
+    ],
+  },
+
+  {
     id: 'wim-hof-basic',
     name: 'Wim Hof Basic',
     description: 'Three cycles of 30 power breaths, exhale-empty hold (user-timed), and a 15-second recovery hold. Builds CO₂ tolerance and mental resilience.',

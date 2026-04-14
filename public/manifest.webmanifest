@@ -1,0 +1,27 @@
+{
+  "id": "/breathwork-timer/",
+  "name": "Breathwork Timer",
+  "short_name": "Breathwork",
+  "description": "Guided breathing exercises and training programs — Box, Wim Hof, Pranayama, Buteyko and more.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#0a0a1a",
+  "orientation": "portrait-primary",
+  "categories": ["health", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
