@@ -15,6 +15,8 @@ export interface TrainingStage {
   name: string
   rounds: number
   phases: BreathPhase[]
+  /** Optional technique instruction shown during this stage in the session view. */
+  instruction?: string
 }
 
 export interface TrainingPlan {

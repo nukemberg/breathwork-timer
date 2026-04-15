@@ -1,7 +1,7 @@
 import type { TrainingPlan, TrainingStage } from '@/types'
 
-function stage(id: string, name: string, rounds: number, phases: TrainingStage['phases']): TrainingStage {
-  return { id, name, rounds, phases }
+function stage(id: string, name: string, rounds: number, phases: TrainingStage['phases'], instruction?: string): TrainingStage {
+  return instruction ? { id, name, rounds, phases, instruction } : { id, name, rounds, phases }
 }
 
 export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
@@ -103,7 +103,7 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
         { type: 'inhale',          duration: 2, method: 'nose' },
         { type: 'exhale',          duration: 3, method: 'nose' },
         { type: 'empty-retention', duration: 0, method: 'nose' },  // user-timed: hold until first urge
-      ]),
+      ], 'After the gentle exhale, pinch the nose shut. Wait for the first clear, definite urge to breathe — then tap and release. Do not strain; this is a diagnostic hold, not a competition.'),
       stage('but-s3', 'Recovery Breathing', 5, [
         { type: 'inhale', duration: 3, method: 'nose' },
         { type: 'exhale', duration: 4, method: 'nose' },
@@ -126,7 +126,7 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
         { type: 'inhale',         duration: 4,  method: 'nose' },
         { type: 'full-retention', duration: 16, method: 'nose' },
         { type: 'exhale',         duration: 8,  method: 'nose' },
-      ]),
+      ], 'On the full inhale, tuck the chin slightly toward the chest (jalandhara bandha). Feel the breath expand across the chest and collar bones. Hold steadily — no gripping. Release the chin lock before exhaling.'),
       stage('ank-s3', 'Integration', 4, [
         { type: 'inhale', duration: 4, method: 'nose' },
         { type: 'exhale', duration: 8, method: 'nose' },
@@ -145,11 +145,11 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
         { type: 'inhale', duration: 4, method: 'nose' },
         { type: 'exhale', duration: 8, method: 'nose' },
       ]),
-      stage('bak-s2', 'Bahya Kumbhaka (1:2:4)', 8, [
+      stage('bak-s2', 'Bahya Kumbhaka (1:2:hold)', 8, [
         { type: 'inhale',          duration: 4, method: 'nose' },
         { type: 'exhale',          duration: 8, method: 'nose' },
         { type: 'empty-retention', duration: 0, method: 'nose' },  // user-timed: hold with bandhas
-      ]),
+      ], 'After the full exhale, lock the breath out. Apply root lock (squeeze the pelvic floor — mula bandha) and draw the belly up (uddiyana bandha). Keep a gentle chin tuck. Hold as long as comfortable, then tap to inhale.'),
       stage('bak-s3', 'Integration', 4, [
         { type: 'inhale', duration: 4, method: 'nose' },
         { type: 'exhale', duration: 8, method: 'nose' },
@@ -168,32 +168,32 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
       stage('kap-c1-pumps', 'Cycle 1 – Power Pumps', 30, [
         { type: 'exhale', duration: 1, method: 'nose' },
         { type: 'inhale', duration: 1, method: 'nose' },
-      ]),
+      ], 'Sit tall. Each exhale is a sharp, quick burst from the lower belly — the inhale follows passively. Keep a steady rhythm.'),
       stage('kap-c1-retain', 'Cycle 1 – Retention', 1, [
         { type: 'inhale',         duration: 3, method: 'nose' },
         { type: 'full-retention', duration: 0, method: 'either' }, // user-timed: hold as long as comfortable
         { type: 'exhale',         duration: 6, method: 'nose' },
-      ]),
+      ], 'Take one full, slow inhale. Hold comfortably — feel warmth and tingling rise through the body. Release gently when ready.'),
       // Cycle 2
       stage('kap-c2-pumps', 'Cycle 2 – Power Pumps', 30, [
         { type: 'exhale', duration: 1, method: 'nose' },
         { type: 'inhale', duration: 1, method: 'nose' },
-      ]),
+      ], 'Sit tall. Each exhale is a sharp, quick burst from the lower belly — the inhale follows passively. Keep a steady rhythm.'),
       stage('kap-c2-retain', 'Cycle 2 – Retention', 1, [
         { type: 'inhale',         duration: 3, method: 'nose' },
         { type: 'full-retention', duration: 0, method: 'either' },
         { type: 'exhale',         duration: 6, method: 'nose' },
-      ]),
+      ], 'Take one full, slow inhale. Hold comfortably — feel warmth and tingling rise through the body. Release gently when ready.'),
       // Cycle 3
       stage('kap-c3-pumps', 'Cycle 3 – Power Pumps', 30, [
         { type: 'exhale', duration: 1, method: 'nose' },
         { type: 'inhale', duration: 1, method: 'nose' },
-      ]),
+      ], 'Sit tall. Each exhale is a sharp, quick burst from the lower belly — the inhale follows passively. Keep a steady rhythm.'),
       stage('kap-c3-retain', 'Cycle 3 – Retention', 1, [
         { type: 'inhale',         duration: 3, method: 'nose' },
         { type: 'full-retention', duration: 0, method: 'either' },
         { type: 'exhale',         duration: 6, method: 'nose' },
-      ]),
+      ], 'Take one full, slow inhale. Hold comfortably — feel warmth and tingling rise through the body. Release gently when ready.'),
       stage('kap-recovery', 'Integration', 5, [
         { type: 'inhale', duration: 4, method: 'nose' },
         { type: 'exhale', duration: 6, method: 'nose' },
@@ -212,12 +212,12 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
         { type: 'inhale',          duration: 4, method: 'nose' },
         { type: 'exhale',          duration: 6, method: 'mouth' },
         { type: 'empty-retention', duration: 0, method: 'either' }, // user-timed: hold + draw belly up
-      ]),
+      ], 'Stand with feet shoulder-width apart, knees slightly bent, hands on thighs. After full exhale, draw the entire abdomen up and inward — create a hollow under the ribs (uddiyana bandha). Release before inhaling.'),
       stage('nauli-chalana', 'Nauli Chalana', 10, [
         { type: 'inhale',          duration: 3, method: 'nose' },
         { type: 'exhale',          duration: 5, method: 'mouth' },
         { type: 'empty-retention', duration: 0, method: 'either' }, // user-timed: isolate + rotate
-      ]),
+      ], 'From uddiyana bandha, push the central abdominal column (rectus abdominis) forward. Then roll it to the left, then right. Hold as long as comfortable before releasing.'),
       stage('nauli-settle', 'Settling Breath', 5, [
         { type: 'inhale', duration: 5, method: 'nose' },
         { type: 'exhale', duration: 5, method: 'nose' },
@@ -235,26 +235,26 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
       stage('dig-warmup', 'Diaphragm Activation', 5, [
         { type: 'inhale', duration: 5, method: 'nose' },
         { type: 'exhale', duration: 7, method: 'mouth' },
-      ]),
-      stage('dig-left', 'Left Nostril Breath (close right nostril)', 10, [
+      ], 'Place one hand on the belly. Each inhale should push the hand outward — breathe into the abdomen, not the chest. Slow and full.'),
+      stage('dig-left', 'Left Nostril Breath', 10, [
         { type: 'inhale', duration: 4, method: 'nose' },
         { type: 'exhale', duration: 6, method: 'nose' },
-      ]),
+      ], 'Close your right nostril with the right thumb. Breathe slowly through the left nostril only. Left-nostril breathing activates the parasympathetic (rest-and-digest) nervous system.'),
       stage('dig-apana', 'Apana Release', 8, [
         { type: 'inhale',          duration: 4, method: 'nose' },
         { type: 'full-retention',  duration: 4, method: 'either' },
         { type: 'exhale',          duration: 8, method: 'mouth' },
         { type: 'empty-retention', duration: 2, method: 'either' },
-      ]),
+      ], 'On the hold, draw the lower belly gently inward. On the long exhale, visualise downward energy (apana) releasing through the base of the body.'),
       stage('dig-pumps', 'Abdominal Pumps', 30, [
         { type: 'exhale', duration: 1, method: 'nose' },
         { type: 'inhale', duration: 1, method: 'nose' },
-      ]),
+      ], 'Each exhale is a sharp pump from the abdomen — like a quick squeeze. The inhale is passive. This stimulates the large intestine and peristalsis.'),
       stage('dig-seal', 'Maha Bandha Seal', 3, [
         { type: 'inhale',         duration: 5, method: 'nose' },
         { type: 'full-retention', duration: 0, method: 'either' }, // user-timed: engage all bandhas
         { type: 'exhale',         duration: 8, method: 'mouth' },
-      ]),
+      ], 'Inhale fully, then apply all three locks together: tuck chin to chest (jalandhara), squeeze the pelvic floor (mula bandha), draw the navel up and in (uddiyana). Hold, then release all locks before exhaling.'),
     ],
   },
 

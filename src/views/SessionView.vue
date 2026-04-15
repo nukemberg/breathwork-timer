@@ -184,6 +184,17 @@ function finishAndGoHome() {
         />
       </div>
 
+      <!-- Stage instruction -->
+      <Transition name="fade-instruction">
+        <div v-if="session.currentStage?.instruction" :key="session.position.stageIndex" class="instruction-card">
+          <svg class="instruction-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.25"/>
+            <path d="M8 7v4.5M8 4.75v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <p class="instruction-text">{{ session.currentStage.instruction }}</p>
+        </div>
+      </Transition>
+
       <!-- Progress info -->
       <div class="progress-area" v-if="session.currentStage">
         <StageProgress
@@ -265,6 +276,38 @@ function finishAndGoHome() {
   padding: 8px 16px;
   flex-shrink: 0;
 }
+
+/* ── Stage instruction ── */
+.instruction-card {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0 16px 4px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.instruction-icon {
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+  opacity: 0.7;
+}
+
+.instruction-text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.fade-instruction-enter-active,
+.fade-instruction-leave-active { transition: opacity 0.3s ease; }
+.fade-instruction-enter-from,
+.fade-instruction-leave-to { opacity: 0; }
 
 /* ── Progress ── */
 .progress-area {
