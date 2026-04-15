@@ -158,6 +158,107 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
   },
 
   {
+    id: 'kapalabhati',
+    name: 'Kapalabhati',
+    description: 'Skull Shining Breath — three cycles of rapid forceful nasal exhalations that energise the body and clear the airways, each followed by a user-timed full retention. Sit tall; the exhale is sharp and active, the inhale passive.',
+    difficulty: 'intermediate',
+    estimatedMinutes: 8,
+    stages: [
+      // Cycle 1
+      stage('kap-c1-pumps', 'Cycle 1 – Power Pumps', 30, [
+        { type: 'exhale', duration: 1, method: 'nose' },
+        { type: 'inhale', duration: 1, method: 'nose' },
+      ]),
+      stage('kap-c1-retain', 'Cycle 1 – Retention', 1, [
+        { type: 'inhale',         duration: 3, method: 'nose' },
+        { type: 'full-retention', duration: 0, method: 'either' }, // user-timed: hold as long as comfortable
+        { type: 'exhale',         duration: 6, method: 'nose' },
+      ]),
+      // Cycle 2
+      stage('kap-c2-pumps', 'Cycle 2 – Power Pumps', 30, [
+        { type: 'exhale', duration: 1, method: 'nose' },
+        { type: 'inhale', duration: 1, method: 'nose' },
+      ]),
+      stage('kap-c2-retain', 'Cycle 2 – Retention', 1, [
+        { type: 'inhale',         duration: 3, method: 'nose' },
+        { type: 'full-retention', duration: 0, method: 'either' },
+        { type: 'exhale',         duration: 6, method: 'nose' },
+      ]),
+      // Cycle 3
+      stage('kap-c3-pumps', 'Cycle 3 – Power Pumps', 30, [
+        { type: 'exhale', duration: 1, method: 'nose' },
+        { type: 'inhale', duration: 1, method: 'nose' },
+      ]),
+      stage('kap-c3-retain', 'Cycle 3 – Retention', 1, [
+        { type: 'inhale',         duration: 3, method: 'nose' },
+        { type: 'full-retention', duration: 0, method: 'either' },
+        { type: 'exhale',         duration: 6, method: 'nose' },
+      ]),
+      stage('kap-recovery', 'Integration', 5, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 6, method: 'nose' },
+      ]),
+    ],
+  },
+
+  {
+    id: 'nauli-kriya',
+    name: 'Nauli Kriya',
+    description: 'Advanced abdominal isolation technique that massages the digestive organs and strengthens the core. Stand with feet shoulder-width, knees slightly bent, hands on thighs. Exhale fully, draw the belly up (uddiyana bandha), then isolate and roll the rectus abdominis. Practice on an empty stomach only.',
+    difficulty: 'advanced',
+    estimatedMinutes: 8,
+    stages: [
+      stage('nauli-prep', 'Uddiyana Preparation', 5, [
+        { type: 'inhale',          duration: 4, method: 'nose' },
+        { type: 'exhale',          duration: 6, method: 'mouth' },
+        { type: 'empty-retention', duration: 0, method: 'either' }, // user-timed: hold + draw belly up
+      ]),
+      stage('nauli-chalana', 'Nauli Chalana', 10, [
+        { type: 'inhale',          duration: 3, method: 'nose' },
+        { type: 'exhale',          duration: 5, method: 'mouth' },
+        { type: 'empty-retention', duration: 0, method: 'either' }, // user-timed: isolate + rotate
+      ]),
+      stage('nauli-settle', 'Settling Breath', 5, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 5, method: 'nose' },
+      ]),
+    ],
+  },
+
+  {
+    id: 'digestive-flow',
+    name: 'Digestive Flow',
+    description: 'A targeted sequence to stimulate peristalsis and encourage bowel movement: diaphragmatic activation, left-nostril parasympathetic breathing (close right nostril with thumb), apana release, abdominal pumps, and a final bandha seal. Best practiced in the morning before eating.',
+    difficulty: 'beginner',
+    estimatedMinutes: 8,
+    stages: [
+      stage('dig-warmup', 'Diaphragm Activation', 5, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 7, method: 'mouth' },
+      ]),
+      stage('dig-left', 'Left Nostril Breath (close right nostril)', 10, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 6, method: 'nose' },
+      ]),
+      stage('dig-apana', 'Apana Release', 8, [
+        { type: 'inhale',          duration: 4, method: 'nose' },
+        { type: 'full-retention',  duration: 4, method: 'either' },
+        { type: 'exhale',          duration: 8, method: 'mouth' },
+        { type: 'empty-retention', duration: 2, method: 'either' },
+      ]),
+      stage('dig-pumps', 'Abdominal Pumps', 30, [
+        { type: 'exhale', duration: 1, method: 'nose' },
+        { type: 'inhale', duration: 1, method: 'nose' },
+      ]),
+      stage('dig-seal', 'Maha Bandha Seal', 3, [
+        { type: 'inhale',         duration: 5, method: 'nose' },
+        { type: 'full-retention', duration: 0, method: 'either' }, // user-timed: engage all bandhas
+        { type: 'exhale',         duration: 8, method: 'mouth' },
+      ]),
+    ],
+  },
+
+  {
     id: 'wim-hof-basic',
     name: 'Wim Hof Basic',
     description: 'Three cycles of 30 power breaths, exhale-empty hold (user-timed), and a 15-second recovery hold. Builds CO₂ tolerance and mental resilience.',
