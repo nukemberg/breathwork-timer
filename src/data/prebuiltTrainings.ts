@@ -229,7 +229,7 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
     id: 'digestive-flow',
     name: 'Digestive Flow',
     description: 'A targeted sequence to stimulate peristalsis and encourage bowel movement: diaphragmatic activation, left-nostril parasympathetic breathing (close right nostril with thumb), apana release, abdominal pumps, and a final bandha seal. Best practiced in the morning before eating.',
-    difficulty: 'beginner',
+    difficulty: 'intermediate',
     estimatedMinutes: 8,
     stages: [
       stage('dig-warmup', 'Diaphragm Activation', 5, [
@@ -251,10 +251,10 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
         { type: 'inhale', duration: 1, method: 'nose' },
       ], 'Each exhale is a sharp pump from the abdomen — like a quick squeeze. The inhale is passive. This stimulates the large intestine and peristalsis.'),
       stage('dig-seal', 'Maha Bandha Seal', 3, [
-        { type: 'inhale',         duration: 5, method: 'nose' },
-        { type: 'full-retention', duration: 0, method: 'either' }, // user-timed: engage all bandhas
-        { type: 'exhale',         duration: 8, method: 'mouth' },
-      ], 'Inhale fully, then apply all three locks together: tuck chin to chest (jalandhara), squeeze the pelvic floor (mula bandha), draw the navel up and in (uddiyana). Hold, then release all locks before exhaling.'),
+        { type: 'inhale',          duration: 5, method: 'nose' },
+        { type: 'exhale',          duration: 8, method: 'nose' },
+        { type: 'empty-retention', duration: 0, method: 'either' }, // user-timed: apply all three bandhas on empty lungs
+      ], 'After the full exhale, hold the breath out and apply all three locks: draw the navel up and in (uddiyana), squeeze the pelvic floor (mula bandha), and tuck the chin to the chest (jalandhara). Hold as long as comfortable, then release the locks before inhaling.'),
     ],
   },
 
