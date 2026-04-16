@@ -1,8 +1,9 @@
 import { watch, onUnmounted } from 'vue'
 import { useSessionStore } from '@/stores/session'
+import { useSessionLogsStore } from '@/stores/sessionLogs'
 import { useTimer } from './useTimer'
 import { useWakeLock } from './useWakeLock'
-import type { TrainingPlan, PhaseType } from '@/types'
+import type { TrainingPlan, PhaseType, UserTimedPhaseLog } from '@/types'
 
 const PHASE_TONES: Record<PhaseType, [number, number]> = {
   'inhale':           [528, 0.35],
@@ -13,10 +14,36 @@ const PHASE_TONES: Record<PhaseType, [number, number]> = {
 
 export function useBreathSession() {
   const session = useSessionStore()
+  const logsStore = useSessionLogsStore()
   const timer = useTimer(1000)
   const wakeLock = useWakeLock()
 
   let audioCtx: AudioContext | null = null
+
+  // ── Session log collection ─────────────────────────────────────────────────
+  let userTimedLog: UserTimedPhaseLog[] = []
+
+  function recordUserTimedPhase() {
+    if (!session.currentStage || !session.currentPhase) return
+    userTimedLog.push({
+      stageName: session.currentStage.name,
+      phaseType: session.currentPhase.type,
+      round: session.position.roundIndex + 1,
+      durationSeconds: session.phaseElapsed,
+    })
+  }
+
+  function saveSessionLog() {
+    if (!session.plan) return
+    logsStore.addEntry({
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      planId: session.plan.id,
+      planName: session.plan.name,
+      totalDurationSeconds: session.overallElapsed,
+      userTimedPhases: [...userTimedLog],
+    })
+  }
 
   // ── Wall-clock phase tracking ──────────────────────────────────────────────
   // Stores the effective wall-clock start time of the current phase.
@@ -95,6 +122,7 @@ export function useBreathSession() {
       const completed = session.advancePhase()
       syncPhaseStart()
       if (completed) {
+        saveSessionLog()
         timer.stop()
         wakeLock.release()
         removeVisibilityListener()
@@ -126,6 +154,7 @@ export function useBreathSession() {
   // ── Session controls ──────────────────────────────────────────────────────
 
   async function startSession(trainingPlan: TrainingPlan) {
+    userTimedLog = []
     session.startSession(trainingPlan)
     syncPhaseStart()
     await wakeLock.request()
@@ -157,9 +186,11 @@ export function useBreathSession() {
   /** Called when user taps to manually advance a user-timed phase. */
   function userAdvancePhase() {
     if (!session.isUserTimedPhase) return
+    recordUserTimedPhase()
     const completed = session.advancePhase()
     syncPhaseStart()
     if (completed) {
+      saveSessionLog()
       timer.stop()
       wakeLock.release()
       removeVisibilityListener()

@@ -10,6 +10,7 @@ const props = defineProps<{
   phaseKey: string | number      // changes each phase → forces ring element re-creation
   isPaused?: boolean
   nextPhase?: BreathPhase | null
+  phaseElapsed?: number          // seconds elapsed — shown as stopwatch for user-timed phases
 }>()
 
 // ── Orb scale per phase ────────────────────────────────────────────────────
@@ -76,9 +77,18 @@ const nextPhaseColor = computed(() =>
   props.nextPhase ? ORB_COLOR[props.nextPhase.type] : null
 )
 
-// ── Countdown display ──────────────────────────────────────────────────────
+// ── Countdown / stopwatch display ─────────────────────────────────────────
 
 const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)))
+
+const elapsed = computed(() => props.phaseElapsed ?? 0)
+const elapsedFormatted = computed(() => {
+  const s = elapsed.value
+  if (s < 60) return String(s)
+  const m = Math.floor(s / 60)
+  const sec = s % 60
+  return `${m}:${String(sec).padStart(2, '0')}`
+})
 </script>
 
 <template>
@@ -128,13 +138,24 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
       <!-- Center overlay text -->
       <div class="breath-center">
         <span class="phase-label">{{ phaseLabel }}</span>
+
+        <!-- Timed phase: big countdown -->
         <span v-if="!isUserTimed" class="countdown" :key="displaySeconds">
           {{ displaySeconds }}
         </span>
-        <span v-else class="tap-hint">
-          <span class="tap-hint-dot" />
-          tap to continue
-        </span>
+
+        <!-- User-timed phase: stopwatch + tap cue -->
+        <template v-else>
+          <span class="elapsed-timer" :key="elapsed">{{ elapsedFormatted }}</span>
+          <span class="tap-cue">
+            <svg class="tap-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
+              <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.4" opacity="0.45"/>
+            </svg>
+            tap when done
+          </span>
+        </template>
+
         <span v-if="nextPhaseLabel" class="next-phase" :style="{ color: nextPhaseColor ?? '' }">
           Next · {{ nextPhaseLabel }}
         </span>
@@ -248,28 +269,41 @@ const displaySeconds = computed(() => Math.ceil(Math.max(0, props.timeRemaining)
   font-variant-numeric: tabular-nums;
 }
 
-.tap-hint {
+.elapsed-timer {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.tap-cue {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.9375rem;
+  gap: 5px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.04em;
-  animation: tap-hint-pulse 1.8s ease-in-out infinite;
+  animation: tap-cue-pulse 1.8s ease-in-out infinite;
+  margin-top: 2px;
 }
 
-.tap-hint-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
+.tap-icon {
+  color: var(--color-accent);
   flex-shrink: 0;
+  animation: tap-icon-ping 1.8s ease-in-out infinite;
 }
 
-@keyframes tap-hint-pulse {
-  0%, 100% { opacity: 0.5; }
+@keyframes tap-cue-pulse {
+  0%, 100% { opacity: 0.55; }
   50%       { opacity: 1; }
+}
+
+@keyframes tap-icon-ping {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.25); }
 }
 
 .next-phase {

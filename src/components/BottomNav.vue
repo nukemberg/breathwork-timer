@@ -21,6 +21,14 @@ import { RouterLink } from 'vue-router'
       <span>Calibrate</span>
     </RouterLink>
 
+    <RouterLink to="/logs" class="nav-item" active-class="nav-item--active">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M8 9h8M8 13h5M8 17h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span>Logs</span>
+    </RouterLink>
+
     <RouterLink to="/custom/new" class="nav-item" active-class="nav-item--active">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>

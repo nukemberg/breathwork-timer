@@ -172,6 +172,7 @@ function finishAndGoHome() {
           :phaseKey="phaseKey"
           :isPaused="session.status === 'paused'"
           :nextPhase="session.nextPhase"
+          :phaseElapsed="session.phaseElapsed"
         />
         <div v-else class="loading-placeholder" />
       </div>

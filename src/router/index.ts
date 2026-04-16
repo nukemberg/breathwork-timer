@@ -23,6 +23,11 @@ const routes = [
     component: () => import('@/views/CalibrationView.vue'),
   },
   {
+    path: '/logs',
+    name: 'logs',
+    component: () => import('@/views/SessionLogsView.vue'),
+  },
+  {
     path: '/custom/new',
     name: 'custom-new',
     component: () => import('@/views/CustomTrainingView.vue'),

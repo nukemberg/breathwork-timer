@@ -37,6 +37,22 @@ export interface CalibrationEntry {
   notes?: string
 }
 
+export interface UserTimedPhaseLog {
+  stageName: string
+  phaseType: PhaseType
+  round: number
+  durationSeconds: number
+}
+
+export interface SessionLog {
+  id: string
+  timestamp: number
+  planId: string
+  planName: string
+  totalDurationSeconds: number
+  userTimedPhases: UserTimedPhaseLog[]
+}
+
 export interface SessionPosition {
   stageIndex: number
   roundIndex: number
