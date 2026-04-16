@@ -147,13 +147,19 @@ const elapsedFormatted = computed(() => {
         <!-- User-timed phase: stopwatch + tap cue -->
         <template v-else>
           <span class="elapsed-timer" :key="elapsed">{{ elapsedFormatted }}</span>
-          <span class="tap-cue">
-            <svg class="tap-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
-              <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.4" opacity="0.45"/>
+          <!-- Finger-tap icon: clearly signals "tap when ready" -->
+          <div class="tap-icon-wrap" aria-label="Tap when done">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+              <!-- Finger -->
+              <path d="M22 5v17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <!-- Fingertip touch point -->
+              <circle cx="22" cy="26" r="5.5" fill="currentColor"/>
+              <!-- Inner ripple -->
+              <circle cx="22" cy="26" r="11" stroke="currentColor" stroke-width="2" opacity="0.45"/>
+              <!-- Outer ripple -->
+              <circle cx="22" cy="26" r="17" stroke="currentColor" stroke-width="1.5" opacity="0.18"/>
             </svg>
-            tap when done
-          </span>
+          </div>
         </template>
 
         <span v-if="nextPhaseLabel" class="next-phase" :style="{ color: nextPhaseColor ?? '' }">
@@ -278,32 +284,16 @@ const elapsedFormatted = computed(() => {
   font-variant-numeric: tabular-nums;
 }
 
-.tap-cue {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.04em;
-  animation: tap-cue-pulse 1.8s ease-in-out infinite;
-  margin-top: 2px;
-}
-
-.tap-icon {
+.tap-icon-wrap {
   color: var(--color-accent);
-  flex-shrink: 0;
-  animation: tap-icon-ping 1.8s ease-in-out infinite;
+  margin-top: 6px;
+  animation: tap-pulse 1.6s ease-in-out infinite;
+  display: flex;
 }
 
-@keyframes tap-cue-pulse {
-  0%, 100% { opacity: 0.55; }
-  50%       { opacity: 1; }
-}
-
-@keyframes tap-icon-ping {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.25); }
+@keyframes tap-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.12); }
 }
 
 .next-phase {
