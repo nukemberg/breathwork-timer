@@ -246,19 +246,20 @@ const elapsedFormatted = computed(() => {
   transform-origin: center;
 }
 
-/* Center text overlay */
+/* Center text overlay — number is pinned to container center;
+   label floats above it, cue/next-phase float below */
 .breath-center {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
   pointer-events: none;
 }
 
 .phase-label {
+  position: absolute;
+  left: 0; right: 0;
+  /* bottom edge sits (half-number-height + gap) above center */
+  bottom: calc(50% + 1.6rem + 6px);
+  text-align: center;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -267,6 +268,11 @@ const elapsedFormatted = computed(() => {
 }
 
 .countdown {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
   font-size: 3rem;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -276,6 +282,11 @@ const elapsedFormatted = computed(() => {
 }
 
 .elapsed-timer {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
   font-size: 3rem;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -285,23 +296,31 @@ const elapsedFormatted = computed(() => {
 }
 
 .tap-icon-wrap {
-  color: var(--color-accent);
-  margin-top: 6px;
-  animation: tap-pulse 1.6s ease-in-out infinite;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  /* top edge sits (half-number-height + gap) below center */
+  top: calc(50% + 1.6rem + 8px);
   display: flex;
+  color: var(--color-accent);
+  animation: tap-pulse 1.6s ease-in-out infinite;
 }
 
 @keyframes tap-pulse {
-  0%, 100% { opacity: 0.75; transform: scale(1); }
-  50%       { opacity: 1;    transform: scale(1.12); }
+  0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 1;    transform: translateX(-50%) scale(1.12); }
 }
 
 .next-phase {
+  position: absolute;
+  left: 0; right: 0;
+  /* top edge sits (half-number-height + gap) below center */
+  top: calc(50% + 1.6rem + 8px);
+  text-align: center;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0.7;
-  margin-top: 2px;
 }
 </style>
