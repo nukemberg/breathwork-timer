@@ -25,15 +25,15 @@ onMounted(async () => {
 
 onUnmounted(() => {
   // Only reset if session is still active (not completed — completed shows summary)
-  if (session.status === 'active' || session.status === 'paused') {
+  if (session.status === 'active' || session.status === 'paused' || session.status === 'preparing') {
     breathSession.endSession()
   }
 })
 
 // Prevent accidental navigation mid-session
 onBeforeRouteLeave((_to, _from, next) => {
-  if (session.status === 'active' || session.status === 'paused') {
-    breathSession.pauseSession()
+  if (session.status === 'active' || session.status === 'paused' || session.status === 'preparing') {
+    if (session.status === 'active') breathSession.pauseSession()
     if (confirm('End this session?')) {
       breathSession.endSession()
       next()
@@ -51,6 +51,7 @@ onBeforeRouteLeave((_to, _from, next) => {
 const isCompleted = computed(() => session.status === 'completed')
 
 const phaseKey = computed(() => {
+  if (session.status === 'preparing') return 'prep'
   const p = session.position
   return `${p.stageIndex}-${p.roundIndex}-${p.phaseIndex}`
 })
@@ -166,12 +167,13 @@ function finishAndGoHome() {
         <BreathAnimation
           v-if="session.currentPhase"
           :phaseType="session.currentPhase.type"
-          :timeRemaining="session.phaseTimeRemaining"
-          :totalDuration="session.currentPhase.duration"
-          :isUserTimed="session.isUserTimedPhase"
+          :timeRemaining="session.status === 'preparing' ? session.prepCountdown : session.phaseTimeRemaining"
+          :totalDuration="session.status === 'preparing' ? 3 : session.currentPhase.duration"
+          :isUserTimed="session.status !== 'preparing' && session.isUserTimedPhase"
           :phaseKey="phaseKey"
           :isPaused="session.status === 'paused'"
-          :nextPhase="session.nextPhase"
+          :isPreparing="session.status === 'preparing'"
+          :nextPhase="session.status === 'preparing' ? (session.currentPhase ?? null) : session.nextPhase"
           :phaseElapsed="session.phaseElapsed"
         />
         <div v-else class="loading-placeholder" />
@@ -187,7 +189,7 @@ function finishAndGoHome() {
 
       <!-- Stage instruction -->
       <Transition name="fade-instruction">
-        <div v-if="session.currentStage?.instruction" :key="session.position.stageIndex" class="instruction-card">
+        <div v-if="session.currentStage?.instruction && session.status !== 'preparing'" :key="session.position.stageIndex" class="instruction-card">
           <svg class="instruction-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.25"/>
             <path d="M8 7v4.5M8 4.75v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -197,7 +199,7 @@ function finishAndGoHome() {
       </Transition>
 
       <!-- Progress info -->
-      <div class="progress-area" v-if="session.currentStage">
+      <div class="progress-area" v-if="session.currentStage && session.status !== 'preparing'">
         <StageProgress
           :totalStages="session.totalStages"
           :currentStageIndex="session.position.stageIndex"

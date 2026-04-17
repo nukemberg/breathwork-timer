@@ -1,7 +1,7 @@
 export type BreathingMethod = 'nose' | 'mouth' | 'either'
 export type PhaseType = 'inhale' | 'full-retention' | 'exhale' | 'empty-retention'
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced'
-export type SessionStatus = 'idle' | 'active' | 'paused' | 'completed'
+export type SessionStatus = 'idle' | 'preparing' | 'active' | 'paused' | 'completed'
 
 export interface BreathPhase {
   type: PhaseType

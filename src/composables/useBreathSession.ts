@@ -104,6 +104,16 @@ export function useBreathSession() {
   // ── Tick ──────────────────────────────────────────────────────────────────
 
   function tick() {
+    if (session.status === 'preparing') {
+      session.tickPrep()
+      if (session.prepCountdown <= 0) {
+        session.activateSession()
+        syncPhaseStart()
+        onPhaseTransition()
+      }
+      return
+    }
+
     if (session.status !== 'active') return
 
     session.tickPhase()  // increments overallElapsed + phaseElapsed
@@ -138,7 +148,7 @@ export function useBreathSession() {
   // fire a tick immediately when the page becomes visible again to resync.
 
   function onVisibilityChange() {
-    if (!document.hidden && session.status === 'active') {
+    if (!document.hidden && (session.status === 'active' || session.status === 'preparing')) {
       tick()
     }
   }
@@ -155,10 +165,8 @@ export function useBreathSession() {
 
   async function startSession(trainingPlan: TrainingPlan) {
     userTimedLog = []
-    session.startSession(trainingPlan)
-    syncPhaseStart()
+    session.startPreparing(trainingPlan)
     await wakeLock.request()
-    onPhaseTransition()
     addVisibilityListener()
     timer.start(tick)
   }

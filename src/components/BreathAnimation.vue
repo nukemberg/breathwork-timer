@@ -9,6 +9,7 @@ const props = defineProps<{
   isUserTimed?: boolean
   phaseKey: string | number      // changes each phase → forces ring element re-creation
   isPaused?: boolean
+  isPreparing?: boolean
   nextPhase?: BreathPhase | null
   phaseElapsed?: number          // seconds elapsed — shown as stopwatch for user-timed phases
 }>()
@@ -45,15 +46,15 @@ const GLOW_COLOR: Record<PhaseType, string> = {
 
 // ── Computed ───────────────────────────────────────────────────────────────
 
-const orbScale = computed(() => ORB_SCALE[props.phaseType])
-const orbColor = computed(() => ORB_COLOR[props.phaseType])
-const phaseLabel = computed(() => PHASE_LABELS[props.phaseType])
-const glowColor = computed(() => GLOW_COLOR[props.phaseType])
+const orbScale = computed(() => props.isPreparing ? 0.65 : ORB_SCALE[props.phaseType])
+const orbColor = computed(() => props.isPreparing ? 'rgba(200, 200, 220, 0.55)' : ORB_COLOR[props.phaseType])
+const phaseLabel = computed(() => props.isPreparing ? 'Get Ready' : PHASE_LABELS[props.phaseType])
+const glowColor = computed(() => props.isPreparing ? 'rgba(200, 200, 220, 0.12)' : GLOW_COLOR[props.phaseType])
 
 // For inhale/exhale the orb transition takes the full phase duration
 // For hold phases we snap immediately (0.4s just for color)
 const isMoving = computed(() =>
-  props.phaseType === 'inhale' || props.phaseType === 'exhale'
+  !props.isPreparing && (props.phaseType === 'inhale' || props.phaseType === 'exhale')
 )
 
 const orbTransitionDuration = computed(() =>

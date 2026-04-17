@@ -9,6 +9,7 @@ export const useSessionStore = defineStore('session', () => {
   const phaseTimeRemaining = ref<number>(0)
   const phaseElapsed = ref<number>(0)
   const overallElapsed = ref<number>(0)
+  const prepCountdown = ref<number>(0)
   const audioEnabled = ref<boolean>(true)
   const hapticEnabled = ref<boolean>(true)
 
@@ -75,6 +76,26 @@ export const useSessionStore = defineStore('session', () => {
   })
 
   // ── Actions ────────────────────────────────────────────────────────────────
+
+  function startPreparing(trainingPlan: TrainingPlan) {
+    plan.value = trainingPlan
+    status.value = 'preparing'
+    prepCountdown.value = 3
+    position.value = { stageIndex: 0, roundIndex: 0, phaseIndex: 0 }
+    phaseTimeRemaining.value = trainingPlan.stages[0].phases[0].duration
+    phaseElapsed.value = 0
+    overallElapsed.value = 0
+  }
+
+  function tickPrep() {
+    if (status.value !== 'preparing') return
+    prepCountdown.value = Math.max(0, prepCountdown.value - 1)
+  }
+
+  function activateSession() {
+    if (status.value !== 'preparing') return
+    status.value = 'active'
+  }
 
   function startSession(trainingPlan: TrainingPlan) {
     plan.value = trainingPlan
@@ -161,6 +182,7 @@ export const useSessionStore = defineStore('session', () => {
     phaseTimeRemaining,
     phaseElapsed,
     overallElapsed,
+    prepCountdown,
     audioEnabled,
     hapticEnabled,
     currentStage,
@@ -171,6 +193,9 @@ export const useSessionStore = defineStore('session', () => {
     stageTimeTotal,
     stageTimeRemaining,
     sessionTimeRemaining,
+    startPreparing,
+    tickPrep,
+    activateSession,
     startSession,
     pauseSession,
     resumeSession,
