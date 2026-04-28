@@ -259,6 +259,65 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
   },
 
   {
+    id: 'hormesis-breathing',
+    name: 'Kitaro Waga Hormesis Breathing',
+    description: 'Four cycles of rapid activation breathing followed by a user-timed empty-lung hold (the hormetic stress core) and a 15-second recovery inhale hold. Finishes with coherence breathing to settle the nervous system. Never practise near water or while driving.',
+    difficulty: 'advanced',
+    estimatedMinutes: 18,
+    stages: [
+      // Cycle 1
+      stage('hw-c1-power', 'Cycle 1 – Activation Breathing', 30, [
+        { type: 'inhale', duration: 2, method: 'either' },
+        { type: 'exhale', duration: 1, method: 'either' },
+      ], 'Deep, rapid breaths — each inhale is full and expansive, each exhale a passive release. Allow tingling and light-headedness; this is the hormetic activation.'),
+      stage('hw-c1-hold', 'Cycle 1 – Empty Hold', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Exhale everything out. With empty lungs, hold gently without straining. This mild hypoxia is the hormetic core. Tap when you feel the first clear urge to breathe.'),
+      stage('hw-c1-recovery', 'Cycle 1 – Recovery Hold', 1, [
+        { type: 'full-retention', duration: 15, method: 'either' },
+      ], 'Take a deep, full inhale and hold. Feel oxygen flooding back in. Rest in the warmth and tingling.'),
+      // Cycle 2
+      stage('hw-c2-power', 'Cycle 2 – Activation Breathing', 30, [
+        { type: 'inhale', duration: 2, method: 'either' },
+        { type: 'exhale', duration: 1, method: 'either' },
+      ], 'Deep, rapid breaths — each inhale is full and expansive, each exhale a passive release. Allow tingling and light-headedness; this is the hormetic activation.'),
+      stage('hw-c2-hold', 'Cycle 2 – Empty Hold', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Exhale everything out. With empty lungs, hold gently without straining. This mild hypoxia is the hormetic core. Tap when you feel the first clear urge to breathe.'),
+      stage('hw-c2-recovery', 'Cycle 2 – Recovery Hold', 1, [
+        { type: 'full-retention', duration: 15, method: 'either' },
+      ], 'Take a deep, full inhale and hold. Feel oxygen flooding back in. Rest in the warmth and tingling.'),
+      // Cycle 3
+      stage('hw-c3-power', 'Cycle 3 – Activation Breathing', 30, [
+        { type: 'inhale', duration: 2, method: 'either' },
+        { type: 'exhale', duration: 1, method: 'either' },
+      ], 'Deep, rapid breaths — each inhale is full and expansive, each exhale a passive release. Allow tingling and light-headedness; this is the hormetic activation.'),
+      stage('hw-c3-hold', 'Cycle 3 – Empty Hold', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Exhale everything out. With empty lungs, hold gently without straining. This mild hypoxia is the hormetic core. Tap when you feel the first clear urge to breathe.'),
+      stage('hw-c3-recovery', 'Cycle 3 – Recovery Hold', 1, [
+        { type: 'full-retention', duration: 15, method: 'either' },
+      ], 'Take a deep, full inhale and hold. Feel oxygen flooding back in. Rest in the warmth and tingling.'),
+      // Cycle 4
+      stage('hw-c4-power', 'Cycle 4 – Activation Breathing', 30, [
+        { type: 'inhale', duration: 2, method: 'either' },
+        { type: 'exhale', duration: 1, method: 'either' },
+      ], 'Deep, rapid breaths — each inhale is full and expansive, each exhale a passive release. Allow tingling and light-headedness; this is the hormetic activation.'),
+      stage('hw-c4-hold', 'Cycle 4 – Empty Hold', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Exhale everything out. With empty lungs, hold gently without straining. This mild hypoxia is the hormetic core. Tap when you feel the first clear urge to breathe.'),
+      stage('hw-c4-recovery', 'Cycle 4 – Recovery Hold', 1, [
+        { type: 'full-retention', duration: 15, method: 'either' },
+      ], 'Take a deep, full inhale and hold. Feel oxygen flooding back in. Rest in the warmth and tingling.'),
+      // Recovery
+      stage('hw-recovery', 'Recovery Breathing', 6, [
+        { type: 'inhale', duration: 6, method: 'nose' },
+        { type: 'exhale', duration: 6, method: 'nose' },
+      ], 'Slow coherence breaths through the nose. Ride the wave back to stillness.'),
+    ],
+  },
+
+  {
     id: 'wim-hof-basic',
     name: 'Wim Hof Basic',
     description: 'Three cycles of 30 power breaths, exhale-empty hold (user-timed), and a 15-second recovery hold. Builds CO₂ tolerance and mental resilience.',
