@@ -359,4 +359,70 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
       ]),
     ],
   },
+
+  {
+    id: 'ben-novak-healing',
+    name: 'Ben Novak Healing Breathwork',
+    description: 'Three rounds of 36 nasal breathing cycles, each followed by a retention prep, a user-timed empty-lung hold (1 min, then 1.5 min × 2), and a 20-second recovery inhale hold. Closes with five Bhramari (Bee Breath) cycles for deep nervous system integration.',
+    difficulty: 'advanced',
+    estimatedMinutes: 15,
+    stages: [
+      // Round 1
+      stage('bn-r1-breath', 'Round 1 – Breathing Cycles', 36, [
+        { type: 'inhale', duration: 2, method: 'nose' },
+        { type: 'exhale', duration: 2, method: 'nose' },
+      ], 'Breathe fully and rhythmically through the nose. Each inhale expands belly and chest; each exhale is a complete release.'),
+      stage('bn-r1-prep', 'Round 1 – Retention Prep', 1, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 5, method: 'nose' },
+      ], 'One slow, deep breath to prepare. Inhale fully, then exhale everything out completely.'),
+      stage('bn-r1-hold', 'Round 1 – Empty Retention', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Lungs empty — hold gently without straining. Target: 1 minute. The stopwatch shows your elapsed time. Tap when you feel the urge to breathe.'),
+      stage('bn-r1-recovery', 'Round 1 – Recovery Hold', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 20, method: 'either' },
+        { type: 'exhale',         duration: 5,  method: 'nose' },
+      ], 'Deep inhale, hold for 20 seconds. Feel healing energy circulating through the body. Exhale slowly.'),
+      // Round 2
+      stage('bn-r2-breath', 'Round 2 – Breathing Cycles', 36, [
+        { type: 'inhale', duration: 2, method: 'nose' },
+        { type: 'exhale', duration: 2, method: 'nose' },
+      ], 'Breathe fully and rhythmically through the nose. Each inhale expands belly and chest; each exhale is a complete release.'),
+      stage('bn-r2-prep', 'Round 2 – Retention Prep', 1, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 5, method: 'nose' },
+      ], 'One slow, deep breath to prepare. Inhale fully, then exhale everything out completely.'),
+      stage('bn-r2-hold', 'Round 2 – Empty Retention', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Lungs empty — hold gently without straining. Target: 1.5 minutes. The stopwatch shows your elapsed time. Tap when you feel the urge to breathe.'),
+      stage('bn-r2-recovery', 'Round 2 – Recovery Hold', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 20, method: 'either' },
+        { type: 'exhale',         duration: 5,  method: 'nose' },
+      ], 'Deep inhale, hold for 20 seconds. Feel healing energy circulating through the body. Exhale slowly.'),
+      // Round 3
+      stage('bn-r3-breath', 'Round 3 – Breathing Cycles', 36, [
+        { type: 'inhale', duration: 2, method: 'nose' },
+        { type: 'exhale', duration: 2, method: 'nose' },
+      ], 'Breathe fully and rhythmically through the nose. Each inhale expands belly and chest; each exhale is a complete release.'),
+      stage('bn-r3-prep', 'Round 3 – Retention Prep', 1, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 5, method: 'nose' },
+      ], 'One slow, deep breath to prepare. Inhale fully, then exhale everything out completely.'),
+      stage('bn-r3-hold', 'Round 3 – Empty Retention', 1, [
+        { type: 'empty-retention', duration: 0, method: 'either' },
+      ], 'Lungs empty — hold gently without straining. Target: 1.5 minutes. The stopwatch shows your elapsed time. Tap when you feel the urge to breathe.'),
+      stage('bn-r3-recovery', 'Round 3 – Recovery Hold', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 20, method: 'either' },
+        { type: 'exhale',         duration: 5,  method: 'nose' },
+      ], 'Deep inhale, hold for 20 seconds. Feel healing energy circulating through the body. Exhale slowly.'),
+      // Bhramari
+      stage('bn-bhramari', 'Bhramari – Bee Breath', 5, [
+        { type: 'inhale', duration: 4, method: 'nose' },
+        { type: 'exhale', duration: 8, method: 'nose' },
+      ], 'Close ears with thumbs, rest fingers lightly over eyes (shanmukhi mudra). Inhale through the nose. On the exhale, hum continuously — a soft "mmm" like a bee. Feel the vibration resonate in the skull and chest.'),
+    ],
+  },
 ]
