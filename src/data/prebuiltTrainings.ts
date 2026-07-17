@@ -425,4 +425,58 @@ export const PREBUILT_TRAININGS: ReadonlyArray<TrainingPlan> = [
       ], 'Close ears with thumbs, rest fingers lightly over eyes (shanmukhi mudra). Inhale through the nose. On the exhale, hum continuously — a soft "mmm" like a bee. Feel the vibration resonate in the skull and chest.'),
     ],
   },
+
+  {
+    id: 'roni-cohen-energizing',
+    name: 'Roni Cohen Energizing Breathwork',
+    description: 'Three rounds of 30 fast power breaths (nose in, mouth out), a 60-second full retention, and a 30-second empty hold. Alternates hypercapnic activation with hypoxic stress to build energy and resilience.',
+    difficulty: 'advanced',
+    estimatedMinutes: 10,
+    stages: [
+      // Round 1
+      stage('rc-r1-power', 'Round 1 – Power Breathing', 30, [
+        { type: 'inhale', duration: 1, method: 'nose' },
+        { type: 'exhale', duration: 1, method: 'mouth' },
+      ], 'Fast, sharp breaths — inhale through the nose, exhale through the mouth. Strong and rhythmic.'),
+      stage('rc-r1-full', 'Round 1 – Full Retention', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 60, method: 'either' },
+      ], 'Take a deep inhale and hold with full lungs for 60 seconds. Stay relaxed — no gripping.'),
+      stage('rc-r1-empty', 'Round 1 – Empty Hold', 1, [
+        { type: 'exhale',          duration: 4,  method: 'mouth' },
+        { type: 'empty-retention', duration: 30, method: 'either' },
+      ], 'Exhale fully and hold on empty lungs for 30 seconds. Stay still and relaxed.'),
+      // Round 2
+      stage('rc-r2-power', 'Round 2 – Power Breathing', 30, [
+        { type: 'inhale', duration: 1, method: 'nose' },
+        { type: 'exhale', duration: 1, method: 'mouth' },
+      ], 'Fast, sharp breaths — inhale through the nose, exhale through the mouth. Strong and rhythmic.'),
+      stage('rc-r2-full', 'Round 2 – Full Retention', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 60, method: 'either' },
+      ], 'Take a deep inhale and hold with full lungs for 60 seconds. Stay relaxed — no gripping.'),
+      stage('rc-r2-empty', 'Round 2 – Empty Hold', 1, [
+        { type: 'exhale',          duration: 4,  method: 'mouth' },
+        { type: 'empty-retention', duration: 30, method: 'either' },
+      ], 'Exhale fully and hold on empty lungs for 30 seconds. Stay still and relaxed.'),
+      // Round 3
+      stage('rc-r3-power', 'Round 3 – Power Breathing', 30, [
+        { type: 'inhale', duration: 1, method: 'nose' },
+        { type: 'exhale', duration: 1, method: 'mouth' },
+      ], 'Fast, sharp breaths — inhale through the nose, exhale through the mouth. Strong and rhythmic.'),
+      stage('rc-r3-full', 'Round 3 – Full Retention', 1, [
+        { type: 'inhale',         duration: 4,  method: 'nose' },
+        { type: 'full-retention', duration: 60, method: 'either' },
+      ], 'Take a deep inhale and hold with full lungs for 60 seconds. Stay relaxed — no gripping.'),
+      stage('rc-r3-empty', 'Round 3 – Empty Hold', 1, [
+        { type: 'exhale',          duration: 4,  method: 'mouth' },
+        { type: 'empty-retention', duration: 30, method: 'either' },
+      ], 'Exhale fully and hold on empty lungs for 30 seconds. Stay still and relaxed.'),
+      // Recovery
+      stage('rc-recovery', 'Recovery', 6, [
+        { type: 'inhale', duration: 5, method: 'nose' },
+        { type: 'exhale', duration: 5, method: 'nose' },
+      ], 'Slow, settling breaths through the nose. Let the nervous system return to baseline.'),
+    ],
+  },
 ]
