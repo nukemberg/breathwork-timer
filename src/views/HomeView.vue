@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTrainingsStore } from '@/stores/trainings'
 import TrainingCard from '@/components/TrainingCard.vue'
@@ -14,6 +14,42 @@ const custom = computed(() => trainingsStore.customTrainings)
 
 function selectTraining(training: TrainingPlan) {
   router.push({ name: 'training-detail', params: { id: training.id } })
+}
+
+// ── PWA install prompt ─────────────────────────────────────────────────────
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
+const installPrompt = ref<BeforeInstallPromptEvent | null>(null)
+const showInstall = computed(() => installPrompt.value !== null)
+
+function onBeforeInstallPrompt(e: Event) {
+  e.preventDefault()
+  installPrompt.value = e as BeforeInstallPromptEvent
+}
+
+function onAppInstalled() {
+  installPrompt.value = null
+}
+
+onMounted(() => {
+  window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+  window.addEventListener('appinstalled', onAppInstalled)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+  window.removeEventListener('appinstalled', onAppInstalled)
+})
+
+async function installApp() {
+  if (!installPrompt.value) return
+  await installPrompt.value.prompt()
+  const { outcome } = await installPrompt.value.userChoice
+  if (outcome === 'accepted') installPrompt.value = null
 }
 </script>
 
@@ -33,6 +69,18 @@ function selectTraining(training: TrainingPlan) {
         <p class="home-subtitle text-secondary">Choose a program to begin</p>
       </div>
     </div>
+
+    <!-- Install banner -->
+    <Transition name="install-fade">
+      <div v-if="showInstall" class="install-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="install-label">Add to Home Screen</span>
+        <button class="btn btn-primary install-btn" @click="installApp">Install</button>
+      </div>
+    </Transition>
 
     <!-- Programs section -->
     <section class="training-section">
@@ -122,4 +170,34 @@ function selectTraining(training: TrainingPlan) {
   padding: 24px 16px;
   text-align: center;
 }
+
+/* Install banner */
+.install-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 16px 16px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--color-text-secondary);
+}
+
+.install-label {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.install-btn {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0 14px;
+  font-size: 0.8125rem;
+}
+
+.install-fade-enter-active,
+.install-fade-leave-active { transition: opacity 0.3s ease; }
+.install-fade-enter-from,
+.install-fade-leave-to { opacity: 0; }
 </style>
