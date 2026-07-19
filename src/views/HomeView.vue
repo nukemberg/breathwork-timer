@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTrainingsStore } from '@/stores/trainings'
+import { usePwaInstall } from '@/composables/usePwaInstall'
 import TrainingCard from '@/components/TrainingCard.vue'
 import { PREBUILT_TRAININGS } from '@/data/prebuiltTrainings'
 import type { TrainingPlan } from '@/types'
@@ -16,41 +17,8 @@ function selectTraining(training: TrainingPlan) {
   router.push({ name: 'training-detail', params: { id: training.id } })
 }
 
-// ── PWA install prompt ─────────────────────────────────────────────────────
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
-}
-
-const installPrompt = ref<BeforeInstallPromptEvent | null>(null)
+const { installPrompt, install } = usePwaInstall()
 const showInstall = computed(() => installPrompt.value !== null)
-
-function onBeforeInstallPrompt(e: Event) {
-  e.preventDefault()
-  installPrompt.value = e as BeforeInstallPromptEvent
-}
-
-function onAppInstalled() {
-  installPrompt.value = null
-}
-
-onMounted(() => {
-  window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt)
-  window.addEventListener('appinstalled', onAppInstalled)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt)
-  window.removeEventListener('appinstalled', onAppInstalled)
-})
-
-async function installApp() {
-  if (!installPrompt.value) return
-  await installPrompt.value.prompt()
-  const { outcome } = await installPrompt.value.userChoice
-  if (outcome === 'accepted') installPrompt.value = null
-}
 </script>
 
 <template>
@@ -78,7 +46,7 @@ async function installApp() {
           <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <span class="install-label">Add to Home Screen</span>
-        <button class="btn btn-primary install-btn" @click="installApp">Install</button>
+        <button class="btn btn-primary install-btn" @click="install">Install</button>
       </div>
     </Transition>
 
