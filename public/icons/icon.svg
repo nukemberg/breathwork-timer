@@ -1,14 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Dark rounded-square background -->
+  <!-- Background -->
   <rect width="512" height="512" rx="112" fill="#0a0a1a"/>
-  <!-- Outer glow ring -->
-  <circle cx="256" cy="256" r="205" fill="none" stroke="#00d4ff" stroke-width="8" opacity="0.20"/>
-  <!-- Mid ring -->
-  <circle cx="256" cy="256" r="155" fill="none" stroke="#00d4ff" stroke-width="6" opacity="0.40"/>
-  <!-- Inner halo -->
-  <circle cx="256" cy="256" r="105" fill="rgba(0,212,255,0.10)"/>
-  <!-- Core orb -->
-  <circle cx="256" cy="256" r="68" fill="#00d4ff"/>
-  <!-- Specular highlight -->
-  <circle cx="237" cy="237" r="26" fill="rgba(255,255,255,0.28)"/>
+
+  <!-- Outer arc — most faded -->
+  <path d="M 36 320 A 220 220 0 0 0 476 320"
+        fill="none" stroke="#00d4ff" stroke-width="18" stroke-linecap="round" opacity="0.25"/>
+
+  <!-- Mid arc -->
+  <path d="M 106 320 A 150 150 0 0 0 406 320"
+        fill="none" stroke="#00d4ff" stroke-width="22" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Inner arc -->
+  <path d="M 176 320 A 80 80 0 0 0 336 320"
+        fill="none" stroke="#00d4ff" stroke-width="26" stroke-linecap="round" opacity="0.88"/>
+
+  <!-- Breath source dot -->
+  <circle cx="256" cy="320" r="34" fill="#00d4ff"/>
+
+  <!-- Specular highlight on dot -->
+  <circle cx="244" cy="308" r="12" fill="rgba(255,255,255,0.32)"/>
 </svg>

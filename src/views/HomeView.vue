@@ -26,10 +26,12 @@ const showInstall = computed(() => installPrompt.value !== null)
     <!-- Header -->
     <div class="home-header">
       <div class="header-logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-          <circle cx="14" cy="14" r="12" stroke="var(--color-accent)" stroke-width="1.8"/>
-          <circle cx="14" cy="14" r="7" fill="var(--color-accent)" opacity="0.2"/>
-          <circle cx="14" cy="14" r="3" fill="var(--color-accent)"/>
+        <svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true">
+          <rect width="512" height="512" rx="112" fill="var(--color-bg-surface)"/>
+          <path d="M 36 320 A 220 220 0 0 0 476 320" fill="none" stroke="var(--color-accent)" stroke-width="18" stroke-linecap="round" opacity="0.25"/>
+          <path d="M 106 320 A 150 150 0 0 0 406 320" fill="none" stroke="var(--color-accent)" stroke-width="22" stroke-linecap="round" opacity="0.55"/>
+          <path d="M 176 320 A 80 80 0 0 0 336 320"  fill="none" stroke="var(--color-accent)" stroke-width="26" stroke-linecap="round" opacity="0.88"/>
+          <circle cx="256" cy="320" r="34" fill="var(--color-accent)"/>
         </svg>
       </div>
       <div>

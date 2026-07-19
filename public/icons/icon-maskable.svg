@@ -1,15 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Full-bleed background (maskable icons must fill edge-to-edge) -->
+  <!-- Full-bleed background — maskable icons fill edge to edge -->
   <rect width="512" height="512" fill="#0a0a1a"/>
-  <!-- All content kept within the safe zone: inner 80% = 409×409 (margin 51px each side) -->
-  <!-- Outer ring — radius 160 keeps within safe zone -->
-  <circle cx="256" cy="256" r="160" fill="none" stroke="#00d4ff" stroke-width="7" opacity="0.22"/>
-  <!-- Mid ring -->
-  <circle cx="256" cy="256" r="118" fill="none" stroke="#00d4ff" stroke-width="5" opacity="0.42"/>
-  <!-- Inner halo -->
-  <circle cx="256" cy="256" r="80" fill="rgba(0,212,255,0.10)"/>
-  <!-- Core orb -->
-  <circle cx="256" cy="256" r="54" fill="#00d4ff"/>
+
+  <!-- All content within safe zone (inner 80%, margin ~51px each side) -->
+  <!-- Arc center at (256, 340) keeps arcs within safe zone -->
+
+  <!-- Outer arc -->
+  <path d="M 76 340 A 180 180 0 0 0 436 340"
+        fill="none" stroke="#00d4ff" stroke-width="16" stroke-linecap="round" opacity="0.25"/>
+
+  <!-- Mid arc -->
+  <path d="M 136 340 A 120 120 0 0 0 376 340"
+        fill="none" stroke="#00d4ff" stroke-width="20" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Inner arc -->
+  <path d="M 196 340 A 60 60 0 0 0 316 340"
+        fill="none" stroke="#00d4ff" stroke-width="23" stroke-linecap="round" opacity="0.88"/>
+
+  <!-- Breath source dot -->
+  <circle cx="256" cy="340" r="28" fill="#00d4ff"/>
+
   <!-- Specular highlight -->
-  <circle cx="241" cy="241" r="20" fill="rgba(255,255,255,0.28)"/>
+  <circle cx="246" cy="330" r="10" fill="rgba(255,255,255,0.32)"/>
 </svg>
