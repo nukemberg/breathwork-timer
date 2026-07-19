@@ -1,4 +1,4 @@
-const CACHE = 'breathwork-v1'
+const CACHE = 'breathwork-v2'
 
 // Pre-cache the app shell on install
 self.addEventListener('install', event => {
@@ -9,6 +9,8 @@ self.addEventListener('install', event => {
         './',
         './index.html',
         './manifest.webmanifest',
+        './icons/icon-192.png',
+        './icons/icon-512.png',
       ])
     )
   )
