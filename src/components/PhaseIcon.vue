@@ -9,7 +9,6 @@ const props = defineProps<{
 
 const isFullRetention = computed(() => props.phaseType === 'full-retention')
 const isEmptyRetention = computed(() => props.phaseType === 'empty-retention')
-const isRetention = computed(() => isFullRetention.value || isEmptyRetention.value)
 
 const methodLabel = computed(() => {
   if (isFullRetention.value) return 'lungs full'
